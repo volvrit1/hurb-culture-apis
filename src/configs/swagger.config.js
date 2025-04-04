@@ -229,7 +229,7 @@ const generateSwagger = async () => {
   return {
     openapi: "3.0.0",
     info: {
-      title: "Mongoose Auto Swagger",
+      title: "Hurb-Culture",
       version: "1.0.0",
       description: "Generated from Mongoose models",
     },
