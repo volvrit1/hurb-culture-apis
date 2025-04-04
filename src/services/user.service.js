@@ -106,9 +106,12 @@ class UserService extends BaseService {
   static async create(userData) {
     userData.password = await bcrypt.hash(userData.password, 10);
     if (userData.role === "admin") {
-      const existing = await this.Model.findDoc({
-        role: "admin",
-      });
+      const existing = await this.Model.findDoc(
+        {
+          role: "admin",
+        },
+        true,
+      );
       if (existing) {
         throw {
           status: false,
