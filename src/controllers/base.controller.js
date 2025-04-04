@@ -42,7 +42,7 @@ class Controller {
       httpStatus.OK,
       res,
       data,
-      `{this.Service.Model.updatedName()} deleted successfully`,
+      `${this.Service.Model.updatedName()} deleted successfully`,
     );
   }
 }
