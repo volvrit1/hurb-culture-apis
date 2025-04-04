@@ -55,6 +55,7 @@ const parseMongooseSchema = (schema) => {
   const properties = {};
   const required = [];
   const fileFields = [];
+  const filterableFields = [];
 
   for (const [key, value] of Object.entries(schema.paths)) {
     if (key === "_id" || key === "__v") continue;
@@ -76,10 +77,21 @@ const parseMongooseSchema = (schema) => {
     if (field.match) properties[key].pattern = field.match.toString();
     if (field.minlength) properties[key].minLength = field.minlength;
     if (field.maxlength) properties[key].maxLength = field.maxlength;
+
     if (field.required) required.push(key);
+
+    // filterable by default unless set to false
+    if (field.filterable !== false) {
+      filterableFields.push({
+        name: key,
+        in: "query",
+        required: false,
+        schema: { type: fieldType },
+      });
+    }
   }
 
-  return { type: "object", properties, required, fileFields };
+  return { type: "object", properties, required, fileFields, filterableFields };
 };
 
 const filterRequestSchema = (schema, excludeFields = []) => {
@@ -128,21 +140,21 @@ const generateSwagger = async () => {
 
   for (const [name, model] of Object.entries(models)) {
     const fullSchema = parseMongooseSchema(model.schema);
-    const { fileFields } = fullSchema;
     const requestSchema = filterRequestSchema(fullSchema, excludeFields);
-
-    const isMultipart = fileFields.length > 0;
-    const requestContentType = isMultipart
+    const hasFile = fullSchema.fileFields.length > 0;
+    const requestContentType = hasFile
       ? "multipart/form-data"
       : "application/json";
 
     components.schemas[name] = fullSchema;
 
     const pathBase = `/api/${name.toLowerCase()}`;
+
     paths[pathBase] = {
       get: {
         summary: `List all ${name}`,
         tags: [name],
+        parameters: fullSchema.filterableFields,
         responses: {
           200: {
             description: `List of ${name}`,
