@@ -4,7 +4,6 @@ import bcrypt from "bcryptjs";
 import OtpService from "#services/otp";
 import BaseService from "#services/base";
 import { createToken } from "#utils/jwt";
-import PhotographerProfileSerice from "#services/photographerProfile";
 
 class UserService extends BaseService {
   static Model = User;
@@ -119,10 +118,6 @@ class UserService extends BaseService {
       }
     }
     const user = await super.create(userData);
-    if (user.role === "photographer") {
-      await PhotographerProfileSerice.create({ userId: user._id });
-      await WalletService.create({ userId: user._id, balance: 0 });
-    }
     return user;
   }
 
