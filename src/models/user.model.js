@@ -36,6 +36,10 @@ const userSchema = new BaseSchema({
     type: String,
     minlength: 8,
   },
+  photo: {
+    type: String,
+    file: true,
+  },
 });
 
 export default mongoose.model("user", userSchema);

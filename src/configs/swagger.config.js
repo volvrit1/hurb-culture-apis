@@ -12,7 +12,6 @@ const getLocalIP = () => {
 
   for (const name of Object.keys(nets)) {
     for (const net of nets[name]) {
-      // Skip internal (i.e., 127.0.0.1) and non-IPv4
       if (net.family === "IPv4" && !net.internal) {
         localIP = net.address;
         break;
@@ -55,23 +54,32 @@ const getType = (type) => {
 const parseMongooseSchema = (schema) => {
   const properties = {};
   const required = [];
+  const fileFields = [];
 
   for (const [key, value] of Object.entries(schema.paths)) {
     if (key === "_id" || key === "__v") continue;
 
     const field = value.options || {};
     const fieldType = getType(field.type || value.instance);
-    properties[key] = { type: fieldType };
+
+    if (field.file) {
+      properties[key] = {
+        type: "string",
+        format: "binary",
+      };
+      fileFields.push(key);
+    } else {
+      properties[key] = { type: fieldType };
+    }
 
     if (field.enum) properties[key].enum = field.enum;
     if (field.match) properties[key].pattern = field.match.toString();
     if (field.minlength) properties[key].minLength = field.minlength;
     if (field.maxlength) properties[key].maxLength = field.maxlength;
-
     if (field.required) required.push(key);
   }
 
-  return { type: "object", properties, required };
+  return { type: "object", properties, required, fileFields };
 };
 
 const filterRequestSchema = (schema, excludeFields = []) => {
@@ -120,7 +128,13 @@ const generateSwagger = async () => {
 
   for (const [name, model] of Object.entries(models)) {
     const fullSchema = parseMongooseSchema(model.schema);
+    const { fileFields } = fullSchema;
     const requestSchema = filterRequestSchema(fullSchema, excludeFields);
+
+    const isMultipart = fileFields.length > 0;
+    const requestContentType = isMultipart
+      ? "multipart/form-data"
+      : "application/json";
 
     components.schemas[name] = fullSchema;
 
@@ -149,7 +163,7 @@ const generateSwagger = async () => {
         requestBody: {
           required: true,
           content: {
-            "application/json": {
+            [requestContentType]: {
               schema: requestSchema,
             },
           },
@@ -197,7 +211,7 @@ const generateSwagger = async () => {
         requestBody: {
           required: true,
           content: {
-            "application/json": {
+            [requestContentType]: {
               schema: requestSchema,
             },
           },
