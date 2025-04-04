@@ -24,8 +24,6 @@ const getLocalIP = () => {
   return localIP;
 };
 
-console.log("Local IP:", getLocalIP());
-
 const modelsDir = path.resolve("src/models");
 
 const getType = (type) => {
@@ -235,7 +233,7 @@ const generateSwagger = async () => {
       version: "1.0.0",
       description: "Generated from Mongoose models",
     },
-    servers: [{ url: `http://localhost:${env.PORT}` }],
+    servers: [{ url: `http://${getLocalIP()}:${env.PORT}` }],
     components,
     paths,
     tags,
