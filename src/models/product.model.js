@@ -28,7 +28,8 @@ const productSchema = new BaseSchema({
     default: false,
   },
   ingredients: {
-    type: [String],
+    type: Array,
+    of: String,
   },
   manufacturer: {
     type: String,
