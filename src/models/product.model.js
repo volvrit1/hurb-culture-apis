@@ -28,8 +28,7 @@ const productSchema = new BaseSchema({
     default: false,
   },
   ingredients: {
-    type: Array,
-    of: String,
+    type: String,
   },
   manufacturer: {
     type: String,
@@ -46,26 +45,26 @@ const productSchema = new BaseSchema({
     type: String,
     required: true,
   },
-  // coverImage: {
-  //   type: String,
-  //   file: true,
-  // },
-  // image1: {
-  //   type: String,
-  //   file: true,
-  // },
-  // image2: {
-  //   type: String,
-  //   file: true,
-  // },
-  // image3: {
-  //   type: String,
-  //   file: true,
-  // },
-  // image4: {
-  //   type: String,
-  //   file: true,
-  // },
+  coverImage: {
+    type: String,
+    file: true,
+  },
+  image1: {
+    type: String,
+    file: true,
+  },
+  image2: {
+    type: String,
+    file: true,
+  },
+  image3: {
+    type: String,
+    file: true,
+  },
+  image4: {
+    type: String,
+    file: true,
+  },
 });
 
 productSchema.pre("save", saveFile);
