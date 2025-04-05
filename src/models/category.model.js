@@ -1,4 +1,5 @@
 import BaseSchema from "#models/base";
+import { saveFile } from "#utils/uploadFile";
 import mongoose from "mongoose";
 
 const categorySchema = new BaseSchema({
@@ -12,5 +13,7 @@ const categorySchema = new BaseSchema({
     file: true,
   },
 });
+
+categorySchema.pre("save", saveFile);
 
 export default mongoose.model("Category", categorySchema);
