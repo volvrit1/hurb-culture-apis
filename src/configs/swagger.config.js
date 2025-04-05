@@ -23,6 +23,9 @@ const getLocalIP = () => {
   return localIP;
 };
 
+const toKebabCase = (str) =>
+  str.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+
 const modelsDir = path.resolve("src/models");
 
 const getType = (type) => {
@@ -148,12 +151,13 @@ const generateSwagger = async () => {
 
     components.schemas[name] = fullSchema;
 
-    const pathBase = `/api/${name.toLowerCase()}`;
+    const kebabName = toKebabCase(name);
+    const pathBase = `/api/${kebabName}`;
 
     paths[pathBase] = {
       get: {
         summary: `List all ${name}`,
-        tags: [name],
+        tags: [kebabName],
         parameters: fullSchema.filterableFields,
         responses: {
           200: {
@@ -171,7 +175,7 @@ const generateSwagger = async () => {
       },
       post: {
         summary: `Create ${name}`,
-        tags: [name],
+        tags: [kebabName],
         requestBody: {
           required: true,
           content: {
@@ -189,7 +193,7 @@ const generateSwagger = async () => {
     paths[`${pathBase}/{id}`] = {
       get: {
         summary: `Get ${name} by ID`,
-        tags: [name],
+        tags: [kebabName],
         parameters: [
           {
             name: "id",
@@ -211,7 +215,7 @@ const generateSwagger = async () => {
       },
       put: {
         summary: `Update ${name}`,
-        tags: [name],
+        tags: [kebabName],
         parameters: [
           {
             name: "id",
@@ -234,7 +238,7 @@ const generateSwagger = async () => {
       },
       delete: {
         summary: `Delete ${name}`,
-        tags: [name],
+        tags: [kebabName],
         parameters: [
           {
             name: "id",
@@ -249,7 +253,7 @@ const generateSwagger = async () => {
       },
     };
 
-    tags.push({ name, description: `${name} operations` });
+    tags.push({ name: kebabName, description: `${name} operations` });
   }
 
   return {
