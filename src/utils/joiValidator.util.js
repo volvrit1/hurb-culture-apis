@@ -40,7 +40,7 @@ function mongooseToJoi(schemaField, fieldName) {
         break;
       case "Object":
       case "ObjectId":
-        joiSchema = Joi.object().unknown(true); // Only objects
+        joiSchema = Joi.string(); // Only objects
         break;
       case "Array":
         if (schemaField.caster && schemaField.caster.schema) {
