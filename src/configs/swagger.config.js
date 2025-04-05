@@ -26,8 +26,6 @@ const getLocalIP = () => {
 const toKebabCase = (str) =>
   str.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
 
-const modelsDir = path.resolve("src/models");
-
 const getType = (type) => {
   if (!type) return "string";
   switch (type) {
@@ -72,6 +70,11 @@ const parseMongooseSchema = (schema) => {
         format: "binary",
       };
       fileFields.push(key);
+    } else if (fieldType === "array") {
+      properties[key] = {
+        type: "array",
+        items: { type: "string" },
+      };
     } else {
       properties[key] = { type: fieldType };
     }
@@ -83,13 +86,22 @@ const parseMongooseSchema = (schema) => {
 
     if (field.required) required.push(key);
 
-    // filterable by default unless set to false
     if (field.filterable !== false) {
+      const paramSchema =
+        fieldType === "array"
+          ? {
+              type: "array",
+              items: { type: "string" },
+              style: "form",
+              explode: true,
+            }
+          : { type: fieldType };
+
       filterableFields.push({
         name: key,
         in: "query",
         required: false,
-        schema: { type: fieldType },
+        schema: paramSchema,
       });
     }
   }
@@ -118,6 +130,8 @@ const filterRequestSchema = (schema, excludeFields = []) => {
 
   return filtered;
 };
+
+const modelsDir = path.join(process.cwd(), "src/models");
 
 const loadModels = async () => {
   const models = {};
