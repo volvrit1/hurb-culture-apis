@@ -72,8 +72,16 @@ const parseMongooseSchema = (schema) => {
       fileFields.push(key);
     } else if (fieldType === "array") {
       properties[key] = {
-        type: "array",
-        items: { type: "string" },
+        oneOf: [
+          {
+            type: "array",
+            items: { type: "string" },
+          },
+          {
+            type: "string",
+            description: "Comma-separated values (e.g., 'val1,val2')",
+          },
+        ],
       };
     } else {
       properties[key] = { type: fieldType };
