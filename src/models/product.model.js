@@ -12,9 +12,11 @@ const productSchema = new BaseSchema({
   categoryId: {
     type: BaseSchema.Types.ObjectId,
     required: true,
+    ref: Category,
   },
   subCategoryId: {
     type: BaseSchema.Types.ObjectId,
+    ref: SubCategory,
   },
   price: {
     type: Number,
