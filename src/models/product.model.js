@@ -69,6 +69,6 @@ const productSchema = new BaseSchema({
 
 productSchema.pre("save", saveFile);
 
-productSchema.index({ createdAt: 1 }, { expireAfterSeconds: 300 });
+productSchema.index({ createdAt: 1 });
 
 export default mongoose.model("product", productSchema);
