@@ -27,8 +27,8 @@ class ProductService extends BaseService {
       {
         $project: {
           name: 1,
-          categoryName: "$categoryData.name",
-          subCategoryName: "$subCategoryData.name",
+          categoryName: { $arrayElemAt: ["$categoryData.name", 0] },
+          subCategoryName: { $arrayElemAt: ["$subCategoryData.name", 0] },
           price: 1,
           discountedPrice: 1,
           quantity: 1,
