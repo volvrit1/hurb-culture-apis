@@ -24,12 +24,8 @@ const userSchema = new BaseSchema({
   },
   role: {
     type: String,
-    enum: ["admin", "photographer", "user"],
+    enum: ["doctor", "user"],
     required: true,
-  },
-  permission: {
-    type: Array,
-    default: [],
   },
   address: String,
   password: {
