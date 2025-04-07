@@ -22,11 +22,6 @@ const userSchema = new BaseSchema({
     trim: true,
     match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   },
-  role: {
-    type: String,
-    enum: ["doctor", "user"],
-    required: true,
-  },
   address: String,
   password: {
     type: String,
