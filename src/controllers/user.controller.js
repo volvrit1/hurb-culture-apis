@@ -23,6 +23,11 @@ class UserController extends Controller {
     const user = await this.Service.get(userData._id);
     sendResponse(httpStatus.OK, res, user);
   }
+
+  static async adminLogin(req, res, next) {
+    const loggedInData = await this.Service.adminLogin(req.body);
+    sendResponse(httpStatus.OK, res, loggedInData, "Logged in successfully");
+  }
 }
 
 export default UserController;

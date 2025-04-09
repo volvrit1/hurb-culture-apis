@@ -8,6 +8,10 @@ import User from "#models/user";
 const router = express.Router();
 
 router
+  .route("/admin-login")
+  .post(asyncHandler(UserController.adminLogin.bind(UserController)));
+
+router
   .route("/login")
   .post(asyncHandler(UserController.login.bind(UserController)));
 

@@ -8,6 +8,47 @@ import { createToken } from "#utils/jwt";
 class UserService extends BaseService {
   static Model = User;
 
+  static async adminLogin(loginData) {
+    const { email, password } = loginData;
+
+    const user = await this.Model.findDoc({
+      email,
+    });
+
+    if (user.role !== "admin") {
+      throw {
+        status: false,
+        message: "Invalid Credentials, Admin doesn't exist",
+        httpStatus: httpStatus.BAD_REQUEST,
+      };
+    }
+
+    const verification = await bcrypt.compare(password, user.password);
+
+    if (!verification) {
+      throw {
+        status: false,
+        message: "Incorrect password",
+        httpStatus: httpStatus.UNAUTHORIZED,
+      };
+    }
+
+    const payload = {
+      ...user.toJSON(),
+    };
+
+    delete payload.password;
+
+    const token = createToken(payload);
+
+    const data = {
+      user,
+      token,
+    };
+
+    return data;
+  }
+
   static async login(otpData) {
     const { email, mobile, otp } = otpData;
 
