@@ -17,6 +17,14 @@ class WishlistService extends BaseService {
           _id: { $in: wishlist.productIds },
         },
       },
+      {
+        $project: {
+          name: 1,
+          discountedPrice: 1,
+          rating: "4",
+          coverImage: 1,
+        },
+      },
     ]);
 
     return products;
