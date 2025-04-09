@@ -1,5 +1,6 @@
 import BaseSchema from "#models/base";
 import mongoose from "mongoose";
+import Product from "#models/product";
 import User from "#models/user";
 
 const wishlistSchema = new BaseSchema({
@@ -8,10 +9,12 @@ const wishlistSchema = new BaseSchema({
     required: true,
     ref: User,
   },
-  productIds: {
-    type: Array,
-    of: BaseSchema.Types.ObjectId,
-  },
+  productIds: [
+    {
+      type: BaseSchema.Types.ObjectId,
+      ref: Product,
+    },
+  ],
 });
 
 export default mongoose.model("wishlist", wishlistSchema);
