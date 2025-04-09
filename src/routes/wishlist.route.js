@@ -7,6 +7,10 @@ import Wishlist from "#models/wishlist";
 const router = express.Router();
 
 router
+  .route("/user/:id")
+  .get(asyncHandler(WishlistController.getByUserId.bind(WishlistController)));
+
+router
   .route("/:id?")
   .get(asyncHandler(WishlistController.get.bind(WishlistController)))
   .post(
