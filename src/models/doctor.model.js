@@ -57,6 +57,17 @@ const doctorSchema = new BaseSchema({
   packageDetails: {
     type: Array,
   },
+  experienceInMonths: {
+    type: Number,
+    min: 0,
+    max: 11,
+    default: 0,
+  },
+  experienceInYears: {
+    type: Number,
+    min: 0,
+    default: 0,
+  },
   address: String,
   password: {
     type: String,
