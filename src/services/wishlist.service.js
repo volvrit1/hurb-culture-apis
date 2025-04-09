@@ -1,4 +1,5 @@
 import Wishlist from "#models/wishlist";
+import mongoose from "mongoose";
 import httpStatus from "http-status";
 import BaseService from "#services/base";
 import ProductService from "#services/product";
@@ -36,7 +37,7 @@ class WishlistService extends BaseService {
       return wishlist;
     }
 
-    const wishlist = await this.Model.findDoc(id);
+    const wishlist = await this.Model.findDocById(id);
 
     if (!wishlist.productIds.length) {
       throw {
@@ -66,7 +67,7 @@ class WishlistService extends BaseService {
   }
 
   static async getByUserId(userId) {
-    const wishlist = await this.Model.getWithAggregate([
+    let wishlist = await this.Model.aggregate([
       {
         $match: {
           userId: new mongoose.Types.ObjectId(userId),
@@ -77,7 +78,18 @@ class WishlistService extends BaseService {
     if (!wishlist.length) {
       throw {
         status: false,
-        message,
+        message: "No wishlist found for this user",
+        httpStatus: httpStatus.BAD_REQUEST,
+      };
+    }
+
+    wishlist = wishlist[0];
+
+    if (!wishlist.productIds.length) {
+      throw {
+        status: true,
+        message: "Wishlist is empty",
+        httpStatus: httpStatus.OK,
       };
     }
 
