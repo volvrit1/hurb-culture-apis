@@ -109,7 +109,10 @@ class WishlistService extends BaseService {
       },
     ]);
 
-    return products;
+    return {
+      wishlistId: wishlist._id,
+      products,
+    };
   }
 }
 
