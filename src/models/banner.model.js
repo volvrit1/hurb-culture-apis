@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import BaseSchema from "#models/base";
+import { saveFile } from "#utils/uploadFile";
 
 const bannerSchema = new BaseSchema({
   image: {
@@ -21,9 +22,6 @@ const bannerSchema = new BaseSchema({
   link: {
     type: String,
   },
-  // appScreen:{
-  //
-  // },
   description: {
     type: String,
   },
@@ -31,5 +29,7 @@ const bannerSchema = new BaseSchema({
     type: String,
   },
 });
+
+bannerSchema.pre("save", saveFile);
 
 export default mongoose.model("Banner", bannerSchema);
