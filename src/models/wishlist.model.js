@@ -8,6 +8,7 @@ const wishlistSchema = new BaseSchema({
     type: BaseSchema.Types.ObjectId,
     required: true,
     ref: User,
+    unique: true,
   },
   productIds: [
     {

@@ -15,9 +15,10 @@ const bannerSchema = new BaseSchema({
     type: Number,
     min: 1,
   },
-  isOrdered: {
-    type: Boolean,
-    default: true,
+  position: {
+    type: String,
+    default: "Top",
+    enum: ["Top", "Bottom", "Middle"],
   },
   link: {
     type: String,

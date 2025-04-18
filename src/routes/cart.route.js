@@ -3,24 +3,18 @@ import validator from "#middlewares/validator";
 import asyncHandler from "#utils/asyncHandler";
 import CartController from "#controllers/cart";
 import Cart from "#models/cart";
+import authentication from "#middlewares/authentication";
 
 const router = express.Router();
 
 router
-  .route("/user/:id")
-  .get(asyncHandler(CartController.getByUserId.bind(CartController)));
-
-router
   .route("/:id?")
-  .get(asyncHandler(CartController.get.bind(CartController)))
-  .post(
-    validator(Cart),
-    asyncHandler(CartController.create.bind(CartController)),
-  )
-  .put(
-    validator(Cart, true),
-    asyncHandler(CartController.update.bind(CartController)),
-  )
-  .delete(asyncHandler(CartController.deleteDoc.bind(CartController)));
+  .get(authentication, asyncHandler(CartController.get.bind(CartController)))
+  .post(asyncHandler(CartController.create.bind(CartController)))
+  .put(authentication, asyncHandler(CartController.update.bind(CartController)))
+  .delete(
+    authentication,
+    asyncHandler(CartController.deleteDoc.bind(CartController)),
+  );
 
 export default router;

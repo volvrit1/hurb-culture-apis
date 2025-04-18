@@ -40,11 +40,7 @@ class WishlistService extends BaseService {
     const wishlist = await this.Model.findDocById(id);
 
     if (!wishlist.productIds.length) {
-      throw {
-        status: false,
-        message: "Wishlist is empty",
-        httpStatus: httpStatus.OK,
-      };
+      return wishlist;
     }
 
     const products = await ProductService.getWithAggregate([
@@ -76,21 +72,17 @@ class WishlistService extends BaseService {
     ]);
 
     if (!wishlist.length) {
-      throw {
-        status: false,
-        message: "No wishlist found for this user",
-        httpStatus: httpStatus.BAD_REQUEST,
-      };
+      wishlist = await this.Model.create({ userId });
+      wishlist = wishlist.toJSON();
+      wishlist.wishlistId = wishlist._id;
+      return wishlist;
     }
 
     wishlist = wishlist[0];
 
     if (!wishlist.productIds.length) {
-      throw {
-        status: true,
-        message: "Wishlist is empty",
-        httpStatus: httpStatus.OK,
-      };
+      wishlist.wishlistId = wishlist._id;
+      return wishlist;
     }
 
     const products = await ProductService.getWithAggregate([

@@ -11,6 +11,8 @@ export default async function globalErrorHandler(err, req, res, next) {
     await transactionSession.abortTransaction();
   }*/
 
+  console.log(err);
+
   if (err instanceof mongoose.Error) {
     switch (true) {
       case err instanceof mongoose.Error.ValidationError:

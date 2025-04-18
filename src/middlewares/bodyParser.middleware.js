@@ -11,7 +11,7 @@ const bodyParser = asyncHandler((req, _res, next) => {
     return next();
   }
 
-  req.body = objectParser(req.body);
+  // req.body = objectParser(req.body);
   next();
 });
 

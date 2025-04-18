@@ -1,114 +1,77 @@
 import Cart from "#models/cart";
-import mongoose from "mongoose";
-import httpStatus from "http-status";
+import { session } from "#middlewares/session";
 import BaseService from "#services/base";
 import ProductService from "#services/product";
 
 class CartService extends BaseService {
   static Model = Cart;
 
-  static async get(id, filters) {
-    if (!id) {
-      const initialStage = [
-        {
-          $lookup: {
-            from: "users",
-            as: "userData",
-            localField: "userId",
-            foreignField: "_id",
-          },
-        },
-      ];
+  static async get() {
+    const userId = session.get("userId");
 
-      const extraStage = [
-        {
-          $project: {
-            userName: { $arrayElemAt: ["$userData.name", 0] },
-          },
-        },
-      ];
-
-      const cart = await this.Model.findAll(filters, initialStage, extraStage);
-
+    let cart = await this.Model.findDoc({ userId }, true);
+    if (!cart) {
+      cart = await this.Model.create({ userId });
       return cart;
     }
 
-    const cart = await this.Model.findDocById(id);
+    cart = cart.toJSON();
 
-    if (!cart.productIds.length) {
-      throw {
-        status: false,
-        message: "Cart is empty",
-        httpStatus: httpStatus.OK,
-      };
-    }
+    const { products: productIds } = cart;
+
+    const productIdArr = productIds.map((ele) => {
+      return ele.product;
+    });
 
     const products = await ProductService.getWithAggregate([
       {
-        $match: {
-          _id: { $in: cart.productIds },
-        },
+        $match: { _id: { $in: productIdArr } },
       },
       {
         $project: {
           name: 1,
-          discountedPrice: 1,
-          rating: "4",
-          coverImage: 1,
+          image: 1,
+          rating: 1,
+          reviewCount: 1,
         },
       },
     ]);
 
-    return products[0];
+    products.forEach((ele, index) => {
+      ele.quantity = productIds[index].quantity;
+    });
+
+    cart.products = products;
+    return cart;
   }
 
-  static async getByUserId(userId) {
-    let cart = await this.Model.aggregate([
-      {
-        $match: {
-          userId: new mongoose.Types.ObjectId(userId),
-        },
-      },
-    ]);
+  static async update(id, data) {
+    const userId = session.get("userId");
 
-    if (!cart.length) {
-      throw {
-        status: false,
-        message: "No cart found for this user",
-        httpStatus: httpStatus.BAD_REQUEST,
-      };
+    let cart = await this.Model.findDoc({ userId }, true);
+
+    if (!cart) {
+      console.log(userId);
+      cart = await this.Model.create({ userId });
     }
 
-    cart = cart[0];
+    cart.update(data);
+    await cart.save();
+    return cart;
+  }
 
-    if (!cart.productIds.length) {
-      throw {
-        status: true,
-        message: "Cart is empty",
-        httpStatus: httpStatus.OK,
-      };
+  static async deleteDoc() {
+    const userId = session.get("userId");
+
+    let cart = await this.Model.findDoc({ userId }, true);
+
+    if (!cart) {
+      cart = await this.Model.create({ userId });
     }
 
-    const products = await ProductService.getWithAggregate([
-      {
-        $match: {
-          _id: { $in: cart.productIds },
-        },
-      },
-      {
-        $project: {
-          name: 1,
-          discountedPrice: 1,
-          rating: "4",
-          coverImage: 1,
-        },
-      },
-    ]);
-
-    return {
-      cartId: cart._id,
-      products,
-    };
+    cart.update({ products: [] });
+    await cart.save();
+    return cart;
   }
 }
 

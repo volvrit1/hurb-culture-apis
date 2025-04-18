@@ -2,7 +2,11 @@ import env from "#configs/env";
 import jwt from "jsonwebtoken";
 import httpStatus from "http-status";
 
-export const createToken = (payload, secret = env.JWT_SECRET, options = {}) => {
+export const createToken = (
+  payload,
+  secret = env.JWT_SECRET,
+  options = { expiresIn: "1d" },
+) => {
   const token = jwt.sign(payload, secret, { ...options });
   return token;
 };

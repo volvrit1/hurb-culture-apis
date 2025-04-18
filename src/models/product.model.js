@@ -67,6 +67,15 @@ const productSchema = new BaseSchema({
     type: String,
     file: true,
   },
+  rating: {
+    type: Number,
+    min: 1,
+    max: 5,
+  },
+  reviewCount: {
+    type: Number,
+    min: 0,
+  },
 });
 
 productSchema.pre("save", saveFile);

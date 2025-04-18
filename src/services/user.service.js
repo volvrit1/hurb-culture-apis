@@ -35,6 +35,7 @@ class UserService extends BaseService {
 
     const payload = {
       ...user.toJSON(),
+      userId: user._id,
     };
 
     delete payload.password;
@@ -96,6 +97,7 @@ class UserService extends BaseService {
 
     const payload = {
       ...user.toJSON(),
+      userId: user._id,
     };
 
     delete payload.password;
