@@ -14,7 +14,6 @@ const brandRegistrationSchema = new BaseSchema({
   about: {
     type: String,
     required: true,
-    maxlength: 300,
   },
   website: {
     type: String,
