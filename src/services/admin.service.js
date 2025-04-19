@@ -41,9 +41,39 @@ class AdminService extends BaseService {
   static async login(adminData) {
     const { email, password } = adminData;
 
-    const admin = await this.Model.findDoc({
-      email,
-    });
+    let admin = await this.Model.aggregate([
+      {
+        $match: { email },
+      },
+      {
+        $lookup: {
+          from: "roles",
+          as: "roleData",
+          localField: "roleId",
+          foreignField: "_id",
+        },
+      },
+      {
+        $project: {
+          name: 1,
+          permissions: { $arrayElemAt: ["$roleData.permissions", 0] },
+          email: 1,
+          roleName: { $arrayElemAt: ["$roleData.name", 0] },
+          password: 1,
+          adminId: "$_id",
+        },
+      },
+    ]);
+
+    if (!admin.length) {
+      throw {
+        status: false,
+        message: "Admin doesn\'t exist",
+        httpStatus: httpStatus.BAD_REQUEST,
+      };
+    }
+
+    admin = admin[0];
 
     const verification = await compare(password, admin.password);
 
@@ -54,10 +84,9 @@ class AdminService extends BaseService {
       };
     }
 
-    const payload = {
-      ...admin.toJSON(),
-      adminId: admin._id,
-    };
+    delete admin.password;
+
+    const payload = admin;
 
     delete payload.password;
 
@@ -106,6 +135,18 @@ class AdminService extends BaseService {
   }
 
   static async create(data) {
+    const adminRole = await AdminService.getDoc({ name: "Admin" });
+
+    const existingAdmin = await this.Model.findDoc({ roleId: adminRole._id });
+
+    if (existingAdmin) {
+      throw {
+        status: false,
+        message: "Admin already exists",
+        httpStatus: httpStatus.FORBIDDEN,
+      };
+    }
+
     data.password = await bcrypt.hash(data.password, 10);
     return await super.create(data);
   }

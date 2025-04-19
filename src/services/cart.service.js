@@ -35,6 +35,8 @@ class CartService extends BaseService {
           image: 1,
           rating: 1,
           reviewCount: 1,
+          discountedPrice: 1,
+          price: 1,
         },
       },
     ]);
@@ -53,7 +55,6 @@ class CartService extends BaseService {
     let cart = await this.Model.findDoc({ userId }, true);
 
     if (!cart) {
-      console.log(userId);
       cart = await this.Model.create({ userId });
     }
 
