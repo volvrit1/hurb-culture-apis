@@ -5,6 +5,7 @@ import httpStatus from "http-status";
 import mongoose from "mongoose";
 import BaseService from "#services/base";
 import RoleService from "#services/role";
+import CategoryService from "#services/category";
 
 class AdminService extends BaseService {
   static Model = Admin;

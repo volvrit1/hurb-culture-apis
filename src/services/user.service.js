@@ -1,6 +1,7 @@
 import User from "#models/user";
 import httpStatus from "http-status";
 import bcrypt from "bcryptjs";
+import { session } from "#middlewares/session";
 import OtpService from "#services/otp";
 import BaseService from "#services/base";
 import { createToken } from "#utils/jwt";
@@ -85,6 +86,8 @@ class UserService extends BaseService {
       }
     }
 
+    console.log(savedOtp, otp);
+
     if (otp !== savedOtp.otp) {
       throw {
         status: false,
@@ -168,6 +171,7 @@ class UserService extends BaseService {
   }
 
   static async update(id, userData) {
+    id = session.get("userId");
     delete userData.password;
     return await super.update(id, userData);
   }

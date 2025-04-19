@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import BaseSchema from "#models/base";
+import { saveFile } from "#utils/uploadFile";
 
 const userSchema = new BaseSchema({
   name: {
@@ -20,7 +21,7 @@ const userSchema = new BaseSchema({
     required: false,
   },
   dateOfBirth: {
-    type: Date, // or use Date type if format allows conversion
+    type: Date,
     required: true,
   },
   gender: {
@@ -66,5 +67,7 @@ const userSchema = new BaseSchema({
     file: true,
   },
 });
+
+userSchema.pre("save", saveFile);
 
 export default mongoose.model("user", userSchema);

@@ -34,6 +34,7 @@ router
     asyncHandler(UserController.create.bind(UserController)),
   )
   .put(
+    authentication,
     validator(User, true),
     asyncHandler(UserController.update.bind(UserController)),
   )

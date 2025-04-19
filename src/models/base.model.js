@@ -90,7 +90,7 @@ class BaseSchema extends Schema {
         searchkey,
         limit = 10,
         search = "",
-        sortdir = "asc",
+        sortdir = "desc",
         sortkey = "createdAt",
         pagination = true,
       } = filters;

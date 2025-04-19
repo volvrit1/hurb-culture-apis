@@ -12,6 +12,11 @@ const categorySchema = new BaseSchema({
     type: String,
     file: true,
   },
+  status: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
 });
 
 categorySchema.pre("save", saveFile);

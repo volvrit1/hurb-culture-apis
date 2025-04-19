@@ -4,6 +4,12 @@ import Brand from "#models/brand";
 import Category from "#models/category";
 import SubCategory from "#models/subCategory";
 import { saveFile } from "#utils/uploadFile";
+const imageSchema = new BaseSchema({
+  image: {
+    type: String,
+    file: true,
+  },
+});
 
 const productSchema = new BaseSchema({
   name: {
@@ -29,9 +35,10 @@ const productSchema = new BaseSchema({
   prescriptionRequired: {
     type: Boolean,
     default: false,
+    required: true,
   },
   ingredients: {
-    type: String,
+    type: BaseSchema.Types.Mixed,
   },
   manufacturer: {
     type: String,
@@ -41,32 +48,16 @@ const productSchema = new BaseSchema({
     type: String,
     required: true,
   },
-  nutritionalValue: {
-    type: BaseSchema.Types.Mixed,
-  },
   description: {
-    type: String,
+    type: [String],
     required: true,
   },
   coverImage: {
     type: String,
     file: true,
   },
-  image1: {
-    type: String,
-    file: true,
-  },
-  image2: {
-    type: String,
-    file: true,
-  },
-  image3: {
-    type: String,
-    file: true,
-  },
-  image4: {
-    type: String,
-    file: true,
+  images: {
+    type: [imageSchema],
   },
   rating: {
     type: Number,
@@ -85,6 +76,9 @@ const productSchema = new BaseSchema({
 });
 
 productSchema.pre("save", saveFile);
+
+imageSchema.pre("save", saveFile);
+
 
 productSchema.index({ createdAt: 1 });
 

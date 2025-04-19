@@ -18,7 +18,7 @@ const otpSchema = new BaseSchema({
     sparse: true,
   },
   otp: {
-    type: String,
+    type: Number,
     required: true,
   },
 });

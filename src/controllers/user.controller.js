@@ -20,7 +20,7 @@ class UserController extends Controller {
   static async getCurrentUser(req, res, next) {
     const userData = session.get("user");
     const user = await this.Service.get(userData._id);
-    sendResponse(httpStatus.OK, res, user);
+    sendResponse(httpStatus.OK, res, user, "User data fetched successfully");
   }
 
   static async adminLogin(req, res, next) {

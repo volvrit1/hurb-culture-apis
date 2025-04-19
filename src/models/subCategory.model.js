@@ -18,6 +18,11 @@ const subCategorySchema = new BaseSchema({
     ref: Category,
     required: true,
   },
+  status: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
 });
 
 subCategorySchema.pre("save", saveFile);
