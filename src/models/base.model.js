@@ -55,6 +55,8 @@ class BaseSchema extends Schema {
       const doc = await this.findOne(filters);
       if (doc || allowNull) return doc;
 
+      console.log(doc, allowNull);
+
       throw {
         status: false,
         message: `${this.modelName} doesn't exist`,

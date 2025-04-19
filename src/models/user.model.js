@@ -11,12 +11,12 @@ const userSchema = new BaseSchema({
     required: true,
     unique: true,
   },
-  contactNumber: {
-    type: String,
+  phone: {
+    type: Number,
     required: true,
   },
-  secondaryContactNumber: {
-    type: String,
+  secondaryPhone: {
+    type: Number,
     required: false,
   },
   dateOfBirth: {
@@ -31,27 +31,21 @@ const userSchema = new BaseSchema({
   // Bank Account Information (for refunds)
   bankName: {
     type: String,
-    required: true,
   },
   accountNumber: {
     type: String,
-    required: true,
   },
   accountHolderName: {
     type: String,
-    required: true,
   },
   ifscCode: {
     type: String,
-    required: true,
   },
   bankBranchName: {
     type: String,
-    required: true,
   },
   branchAddress: {
     type: String,
-    required: false,
   },
   newsletterSubscription: {
     type: Boolean,
@@ -66,6 +60,10 @@ const userSchema = new BaseSchema({
     type: Boolean,
     required: true,
     default: false,
+  },
+  ageDocument: {
+    type: String,
+    file: true,
   },
 });
 

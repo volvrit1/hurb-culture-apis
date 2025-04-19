@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import BaseSchema from "#models/base";
+import Brand from "#models/brand";
 import Category from "#models/category";
 import SubCategory from "#models/subCategory";
 import { saveFile } from "#utils/uploadFile";
@@ -75,6 +76,11 @@ const productSchema = new BaseSchema({
   reviewCount: {
     type: Number,
     min: 0,
+  },
+  brandId: {
+    type: BaseSchema.Types.ObjectId,
+    required: true,
+    ref: Brand,
   },
 });
 

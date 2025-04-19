@@ -4,6 +4,7 @@ import { createToken } from "#utils/jwt";
 import httpStatus from "http-status";
 import mongoose from "mongoose";
 import BaseService from "#services/base";
+import RoleService from "#services/role";
 
 class AdminService extends BaseService {
   static Model = Admin;
@@ -135,11 +136,14 @@ class AdminService extends BaseService {
   }
 
   static async create(data) {
-    const adminRole = await AdminService.getDoc({ name: "Admin" });
+    const adminRole = await RoleService.getDoc({ name: "Admin" }, true);
 
-    const existingAdmin = await this.Model.findDoc({ roleId: adminRole._id });
+    const existingAdmin = await this.Model.findDoc(
+      { roleId: adminRole._id },
+      true,
+    );
 
-    if (existingAdmin) {
+    if (existingAdmin && data.roleId === adminRole._id) {
       throw {
         status: false,
         message: "Admin already exists",
@@ -153,7 +157,7 @@ class AdminService extends BaseService {
 
   static async update(id, data) {
     delete data.password;
-    return await super.update(data);
+    return await super.update(id, data);
   }
 }
 

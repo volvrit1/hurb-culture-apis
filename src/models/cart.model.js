@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import BaseSchema from "#models/base";
 import User from "#models/user";
+import Brand from "#models/brand";
 import Product from "#models/product";
 
 const productCartSchema = new BaseSchema({
@@ -22,6 +23,11 @@ const cartSchema = new BaseSchema({
     ref: User,
   },
   products: [productCartSchema],
+  brandId: {
+    type: BaseSchema.Types.ObjectId,
+    required: true,
+    ref: Brand,
+  },
 });
 
 export default mongoose.model("cart", cartSchema);

@@ -80,8 +80,10 @@ function mongooseToJoi(schemaField, fieldName) {
 
   // Check if the field is required
   const isRequired =
-    schemaField.required === true ||
-    (schemaField.options && schemaField.options.required === true);
+    (schemaField.required === true && schemaField.default === undefined) ||
+    (schemaField.options &&
+      schemaField.options.required === true &&
+      schemaField.options.default === undefined);
   return isRequired ? joiSchema.required() : joiSchema.allow(null).optional();
 }
 

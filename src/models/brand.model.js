@@ -142,6 +142,7 @@ const brandRegistrationSchema = new BaseSchema({
   password: {
     type: String,
     required: true,
+    default: "password",
   },
   approved: {
     type: Boolean,
