@@ -19,7 +19,6 @@ class UserController extends Controller {
 
   static async getCurrentUser(req, res, next) {
     const userData = session.get("user");
-    console.log(userData);
     const user = await this.Service.get(userData._id);
     sendResponse(httpStatus.OK, res, user);
   }

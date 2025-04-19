@@ -1,8 +1,20 @@
 import express from "express";
 import asyncHandler from "#utils/asyncHandler";
 import AdminController from "#controllers/admin";
+import authentication from "#middlewares/authentication";
 
 const router = express.Router();
+
+router
+  .route("/login")
+  .post(asyncHandler(AdminController.login.bind(AdminController)));
+
+router
+  .route("/get-current-admin")
+  .get(
+    authentication,
+    asyncHandler(AdminController.getCurrentAdmin.bind(AdminController)),
+  );
 
 router
   .route("/:id?")

@@ -16,9 +16,14 @@ export default function authentication(req, res, next) {
     }
 
     const payload = verifyToken(token);
-    console.log(payload);
-    session.set("user", payload);
-    session.set("userId", payload.userId);
+
+    payload.adminId
+      ? session.set("admin", payload)
+      : session.set("user", payload);
+    payload.adminId
+      ? session.set("adminId", payload.adminId)
+      : session.set("userId", payload.userId);
+
     return next();
   } catch (err) {
     next(err);

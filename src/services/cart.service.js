@@ -29,6 +29,8 @@ class CartService extends BaseService {
       },
       {
         $project: {
+          _id: 0,
+          product: "$_id",
           name: 1,
           image: 1,
           rating: 1,
