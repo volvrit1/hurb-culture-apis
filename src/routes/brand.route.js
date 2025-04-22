@@ -7,6 +7,10 @@ import Brand from "#models/brand";
 const router = express.Router();
 
 router
+  .route("/login")
+  .post(asyncHandler(BrandController.login.bind(BrandController)));
+
+router
   .route("/:id?")
   .get(asyncHandler(BrandController.get.bind(BrandController)))
   .post(

@@ -1,4 +1,6 @@
 import Cart from "#models/cart";
+import httpStatus from "http-status";
+import mongoose from "mongoose";
 import { session } from "#middlewares/session";
 import BaseService from "#services/base";
 import ProductService from "#services/product";
@@ -47,6 +49,29 @@ class CartService extends BaseService {
 
     cart.products = products;
     return cart;
+  }
+
+  static async create(data) {
+    const userId = session.get("userId");
+
+    const existingCarts = await this.Model.aggregate([
+      {
+        $match: {
+          userId: new mongoose.Types.ObjectId(userId),
+        },
+      },
+    ]);
+
+    if (existingCarts.length > 2) {
+      throw {
+        status: false,
+        message:
+          "Cannot create more than 3 carts, please delete the existing one",
+        httpStatus: httpStatus.BAD_REQUEST,
+      };
+    }
+
+    return await super.create(data);
   }
 
   static async update(id, data) {

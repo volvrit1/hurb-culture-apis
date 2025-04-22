@@ -19,7 +19,6 @@ const cartSchema = new BaseSchema({
   userId: {
     type: BaseSchema.Types.ObjectId,
     required: true,
-    unique: true,
     ref: User,
   },
   products: [productCartSchema],
@@ -29,5 +28,7 @@ const cartSchema = new BaseSchema({
     ref: Brand,
   },
 });
+
+cartSchema.index({ userId: 1, brandId: 1 }, { unique: true });
 
 export default mongoose.model("cart", cartSchema);

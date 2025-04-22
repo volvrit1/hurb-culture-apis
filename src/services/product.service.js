@@ -33,6 +33,8 @@ class ProductService extends BaseService {
           discountedPrice: 1,
           quantity: 1,
           coverImage: 1,
+          reviewCount: 1,
+          rating: 1,
         },
       },
     ];

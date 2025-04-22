@@ -7,6 +7,14 @@ import Category from "#models/category";
 const router = express.Router();
 
 router
+  .route("/sub-category")
+  .get(
+    asyncHandler(
+      CategoryController.getWithSubCategory.bind(CategoryController),
+    ),
+  );
+
+router
   .route("/:id?")
   .get(asyncHandler(CategoryController.get.bind(CategoryController)))
   .post(

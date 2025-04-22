@@ -31,11 +31,6 @@ const addressSchema = new BaseSchema({
     type: Number,
     required: true,
   },
-  type: {
-    type: String,
-    enum: ["Billing", "Shipping"],
-    required: true,
-  },
 });
 
 export default mongoose.model("address", addressSchema);

@@ -4,6 +4,7 @@ import Brand from "#models/brand";
 import Category from "#models/category";
 import SubCategory from "#models/subCategory";
 import { saveFile } from "#utils/uploadFile";
+
 const imageSchema = new BaseSchema({
   image: {
     type: String,
@@ -37,16 +38,17 @@ const productSchema = new BaseSchema({
     default: false,
     required: true,
   },
-  ingredients: {
-    type: BaseSchema.Types.Mixed,
-  },
   manufacturer: {
     type: String,
     required: true,
   },
-  quantity: {
-    type: String,
+  inStock: {
+    type: Boolean,
     required: true,
+    default:false
+  },
+  productDetails: {
+    type: BaseSchema.Types.Mixed,
   },
   description: {
     type: [String],
@@ -72,6 +74,22 @@ const productSchema = new BaseSchema({
     type: BaseSchema.Types.ObjectId,
     required: true,
     ref: Brand,
+  },
+  image1: {
+    type: String,
+    file: true,
+  },
+  image2: {
+    type: String,
+    file: true,
+  },
+  image3: {
+    type: String,
+    file: true,
+  },
+  image4: {
+    type: String,
+    file: true,
   },
 });
 
