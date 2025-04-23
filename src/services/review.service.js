@@ -14,6 +14,14 @@ class ReviewService extends BaseService {
           foreignField: "_id",
         },
       },
+      {
+        $lookup: {
+          from: "products",
+          as: "productData",
+          localField: "productId",
+          foreignField: "_id",
+        },
+      },
     ];
 
     const extraStage = [
@@ -21,6 +29,11 @@ class ReviewService extends BaseService {
         $project: {
           rating: 1,
           userName: { $arrayElemAt: ["$userData.name", 0] },
+          userProfile: { $arrayElemAt: ["$userData.profile", 0] },
+          status: 1,
+          createdAt: 1,
+          productName: { $arrayElemAt: ["$productData.name", 0] },
+          review: 1,
         },
       },
     ];

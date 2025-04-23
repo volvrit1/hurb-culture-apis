@@ -66,6 +66,10 @@ const userSchema = new BaseSchema({
     type: String,
     file: true,
   },
+  profile: {
+    type: String,
+    file: true,
+  },
 });
 
 userSchema.pre("save", saveFile);
