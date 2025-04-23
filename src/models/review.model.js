@@ -24,6 +24,10 @@ const reviewSchema = new BaseSchema({
     type: String,
     required: true,
   },
+  status:{
+    type:Boolean,
+    default:false
+  }
 });
 
 export default mongoose.model("review", reviewSchema);

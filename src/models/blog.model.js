@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import BaseSchema from "#models/base";
 import BlogCategory from "#models/blogCategory";
+import { saveFile } from "#utils/uploadFile";
 
 const blogSchema = new BaseSchema({
   title: {
@@ -22,7 +23,6 @@ const blogSchema = new BaseSchema({
   },
   slug: {
     type: String,
-    required: true,
     unique: true,
   },
   blogCategoryId: {
@@ -30,6 +30,23 @@ const blogSchema = new BaseSchema({
     ref: BlogCategory,
     required: true,
   },
+  status: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
 });
+
+blogSchema.pre("validate", function (next) {
+  if (!this.slug && this.title) {
+    this.slug = this.title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)+/g, "");
+  }
+  next();
+});
+
+blogSchema.pre("save", saveFile);
 
 export default mongoose.model("blog", blogSchema);
